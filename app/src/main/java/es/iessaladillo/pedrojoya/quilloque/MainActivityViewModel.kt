@@ -55,8 +55,8 @@ class MainActivityViewModel(private val repository: AppDatabase) : ViewModel() {
 
     }
 
-    fun cambiarListaSugerida(it: String) {
-        contactSugeridoList = repository.contactDao.querySugerenciasContacto("%"+it+"%")
+    fun cambiarListaSugerida(it: String): LiveData<List<ContactoSugerido>> {
+        return repository.contactDao.querySugerenciasContacto("%"+it+"%")
     }
 
     fun actualizarListaContact(texto: String): LiveData<List<Contact>> {

@@ -106,7 +106,7 @@ class DialFragment : Fragment(R.layout.dial_fragment) {
 
 
 
-        lblCreateContact.setOnClickListener { navController.navigate(R.id.contactCreationFragmentDestination) }
+        lblCreateContact.setOnClickListener({ navController.navigate(R.id.contactCreationFragmentDestination) })
     }
 
     private fun deleteAllNumber(): Boolean {

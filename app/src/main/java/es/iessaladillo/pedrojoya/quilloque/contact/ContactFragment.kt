@@ -3,6 +3,9 @@ package es.iessaladillo.pedrojoya.quilloque.contact
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
@@ -82,6 +85,7 @@ class ContactFragment : Fragment(R.layout.contacts_fragment) {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        setHasOptionsMenu(true)
         initView()
         observe()
     }
@@ -115,6 +119,10 @@ class ContactFragment : Fragment(R.layout.contacts_fragment) {
         })
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.contact_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
     private fun observeSearch() {
         viewModel.contactList.observeForever {  }
         viewModel.actualizarListaContact(txtSearch.text.toString()).observe(this) {
@@ -123,6 +131,14 @@ class ContactFragment : Fragment(R.layout.contacts_fragment) {
         }
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
+            R.id.mnuAddContact -> {
+                navController.navigate(R.id.contactCreationFragmentDestination)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     private fun setupRecyclerView() {
         lstContacts.run {
             setHasFixedSize(true)
