@@ -1,7 +1,11 @@
 package es.iessaladillo.pedrojoya.quilloque.contact
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
+import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
@@ -22,7 +26,7 @@ import es.iessaladillo.pedrojoya.quilloque.recent.RecentFragmentAdapter
 import kotlinx.android.synthetic.main.contacts_fragment.*
 
 
-class ContactFragment: Fragment(R.layout.contacts_fragment) {
+class ContactFragment : Fragment(R.layout.contacts_fragment) {
 
     private val navController by lazy { findNavController() }
 
@@ -46,7 +50,7 @@ class ContactFragment: Fragment(R.layout.contacts_fragment) {
                         "12:45"
                     )
                 )
-
+                Toast.makeText(requireContext(), "llamada realizada", Toast.LENGTH_LONG).show()
 
             }
             callVideollamada = {
@@ -60,6 +64,9 @@ class ContactFragment: Fragment(R.layout.contacts_fragment) {
                         "12:45"
                     )
                 )
+
+
+                Toast.makeText(requireContext(), "Videollamada realizada", Toast.LENGTH_LONG).show()
 
             }
         }
@@ -80,7 +87,7 @@ class ContactFragment: Fragment(R.layout.contacts_fragment) {
     }
 
     private fun observe() {
-        viewModel.contactList.observe(this){
+        viewModel.contactList.observe(this) {
             listAdapter.submitList(it)
             emptyView.visibility = if (it.isEmpty()) View.VISIBLE else View.INVISIBLE
         }
@@ -91,6 +98,29 @@ class ContactFragment: Fragment(R.layout.contacts_fragment) {
         setupRecyclerView()
         emptyView.setOnClickListener { navController.navigate(R.id.contactCreationFragmentDestination) }
 
+        txtSearch.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (txtSearch.text.isEmpty()) {
+                    observe()
+                } else {
+                    observeSearch()
+                }
+            }
+        })
+    }
+
+    private fun observeSearch() {
+        viewModel.contactList.observeForever {  }
+        viewModel.actualizarListaContact(txtSearch.text.toString()).observe(this) {
+            listAdapter.submitList(it)
+            emptyView.visibility = if (it.isEmpty()) View.VISIBLE else View.INVISIBLE
+        }
     }
 
     private fun setupRecyclerView() {

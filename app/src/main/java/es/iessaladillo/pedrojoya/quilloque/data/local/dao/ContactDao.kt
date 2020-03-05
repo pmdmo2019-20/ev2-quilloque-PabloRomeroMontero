@@ -24,6 +24,9 @@ interface ContactDao {
     @Query("Select * From contact where id = :id")
     fun querySearch(id: String) : Contact
 
+    @Query("Select * From contact Where name like :nombre")
+    fun queryContactsOf(nombre: String) : LiveData<List<Contact>>
+
     @Query(
         "SELECT name AS contactName, phoneNumber AS phoneNumber FROM Contact " +
                 "WHERE phoneNumber like :phoneNumber UNION SELECT DISTINCT phoneNumber AS contactName, phoneNumber " +
